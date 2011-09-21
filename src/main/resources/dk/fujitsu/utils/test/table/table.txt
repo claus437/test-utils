@@ -1,0 +1,33 @@
+
+1. Two tables side by side
+
+! dimensions             !   ! expected       !
+| width | length | depth |   | square | cubic |
+|    10 |     20 |    30 |   |      6 |     6 |
+|    11 |     21 |    31 |   |     20 |    40 |
+|    12 |     22 |    32 |   |     10 |    15 |
+
+
+2. Nested Objects
+
+   The dimension holds a single object referring to the first row of the dimension table,
+   while shape holds a list of all shapes defined in the shapes table.
+
+! figures                           !
+| id | dimension        | shapes    |
+|  1 | ${dimensions[0]} | ${shapes} |
+
+
+3. Merged tables
+
+! extended_dimension    !
+| ${dimension} | weight |
+|            0 |     50 |
+|            1 |     60 |
+|            2 |     70 |
+
+
+! shapes     !
+| id | name  |
+| 1  | Chair |
+| 2  | Piano |
