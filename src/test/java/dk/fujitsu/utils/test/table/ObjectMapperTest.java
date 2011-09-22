@@ -1,6 +1,7 @@
 package dk.fujitsu.utils.test.table;
 
 import dk.fujitsu.utils.test.Dimension;
+import dk.fujitsu.utils.test.ExtendedDimension;
 import dk.fujitsu.utils.test.Figure;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,13 +66,25 @@ public class ObjectMapperTest {
     }
 
     @Test
-    public void temp() {
-        Pattern pattern = Pattern.compile("\\W*\\$\\{(.*)\\[(\\d+)\\]\\}\\W*");
-        String test = "${dimensions[0]}";
+    public void testMergedTables() {
+        DataBase dataBase;
 
-        Matcher matcher = pattern.matcher(test);
-         matcher.find();
-        System.out.println(matcher.group(1) + " " + matcher.group(2));
+        dataBase = new DataBase("dk/fujitsu/utils/test/table/table.txt");
+        ObjectMapper<ExtendedDimension> subject = new ObjectMapper<ExtendedDimension>(dataBase, ExtendedDimension.class);
+
+        subject.nextRow();
+        subject.read("${dimension}", "0");
+        subject.read("weight", "100");
+
+        Assert.assertEquals(10, subject.getObjectList().get(0).getWidth());
+        Assert.assertEquals("20", subject.getObjectList().get(0).getLength());
+        Assert.assertEquals("30", subject.getObjectList().get(0).getDepth());
+        Assert.assertEquals("100", subject.getObjectList().get(0).getWeight());
     }
 
+    @Test
+    public void testInheritedFields() {
+        this.getClass().getFields();
+
+    }
 }

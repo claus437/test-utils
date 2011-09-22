@@ -27,6 +27,13 @@
 |            2 |     70 |
 
 
+4. Single value tables
+
+! singleValue !
+| value       |
+|           1 |
+|           2 |
+
 ! shapes     !
 | id | name  |
 | 1  | Chair |

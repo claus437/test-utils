@@ -46,7 +46,7 @@ public class TableTest implements CellReader {
 
         Assert.assertEquals(4, cells.size());
         Assert.assertEquals("1,id:1", cells.get(0));
-        Assert.assertEquals("2,type:Piano", cells.get(3));
+        Assert.assertEquals("2,name:Piano", cells.get(3));
     }
 
 

@@ -52,4 +52,17 @@ public class TableDataProviderTest {
         Assert.assertEquals(12, dimensionList.get(1).getWidth());
     }
 
+    @Test
+    public void testSingleValueTable() {
+        TableDataProvider<String> subject;
+
+        subject = new TableDataProvider<String>(new DataBase(""), String.class, "singleValue", getClass().getClassLoader().getResourceAsStream("dk/fujitsu/utils/test/table/table.txt"));
+
+        Assert.assertEquals(2, subject.readList().size());
+        Assert.assertEquals("1", subject.readList().get(0));
+        Assert.assertEquals("2", subject.readList().get(1));
+        Assert.assertEquals("1", subject.readObject(0));
+        Assert.assertEquals("2", subject.readList(1).get(0));
+    }
+
 }

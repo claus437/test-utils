@@ -10,26 +10,46 @@ import java.util.regex.Pattern;
 
 public class ObjectMapper<T> implements CellReader {
     private static final Pattern OBJECT_REFERENCE = Pattern.compile("\\W*\\$\\{(.*)\\[(\\d+)\\]\\}\\W*");
+    // TODO: rename as also used for table merge
     private static final Pattern OBJECT_LIST_REFERENCE = Pattern.compile("\\W*\\$\\{(.*)\\}\\W*");
 
     private List<T> objectList;
     private T object;
     private Class<T> type;
     private DataBase dataBase;
+    private boolean singleColumn;
 
     public ObjectMapper(DataBase dataBase, Class<T> type) {
         objectList = new ArrayList<T>();
         this.type = type;
         this.dataBase = dataBase;
+
+        if (Converter.isConvertible(type)) {
+            singleColumn = true;
+        }
     }
 
     public void nextRow() {
-        object = createObject();
-        objectList.add(object);
+        if (!singleColumn) {
+            object = createObject();
+            objectList.add(object);
+        }
     }
 
     public void read(String columnName, String columnValue) {
         Matcher matcher;
+
+        if (singleColumn) {
+            object = Converter.toObject(type, columnValue);
+            objectList.add(object);
+            return;
+        }
+
+        matcher = OBJECT_LIST_REFERENCE.matcher(columnName);
+        if (matcher.find()) {
+            setObject(matcher.group(1), Integer.parseInt(columnValue));
+            return;
+        }
 
         matcher = OBJECT_REFERENCE.matcher(columnValue);
         if (matcher.find()) {
@@ -57,6 +77,25 @@ public class ObjectMapper<T> implements CellReader {
             throw new RuntimeException(x.getMessage());
         } catch (IllegalAccessException x) {
             throw new RuntimeException(x.getMessage());
+        }
+    }
+
+    private void setObject(String tableName, int row) {
+        Object foreignObject;
+        Object value;
+        Field[] fields;
+
+        try {
+            foreignObject = dataBase.getTable(type, tableName).readObject(row);
+            fields = type.getDeclaredFields();
+
+            for (Field field : fields) {
+                field.setAccessible(true);
+                value = field.get(foreignObject);
+                field.set(object, value);
+            }
+        } catch (IllegalAccessException x) {
+            throw new RuntimeException(x.getMessage(), x);
         }
     }
 

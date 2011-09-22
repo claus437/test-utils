@@ -1,5 +1,7 @@
 package dk.fujitsu.utils.test.converter;
 
+import sun.java2d.SunGraphicsEnvironment;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ public abstract class Converter {
     }
 
     public static boolean isConvertible(Class type) {
-        return CONVERTERS.containsKey(type) || getStringConstructor(type) != null;
+        return CONVERTERS.containsKey(type) || type.isEnum() || getStringConstructor(type) != null;
     }
 
     public static <T> T toObject(Class<T> type, String value) {
@@ -30,6 +32,10 @@ public abstract class Converter {
 
         if (CONVERTERS.containsKey(type)) {
             return (T) CONVERTERS.get(type).toObject(value);
+        }
+
+        if (type.isEnum()) {
+            return (T) createEnum(type, value);
         }
 
         constructor = getStringConstructor(type);
@@ -55,6 +61,10 @@ public abstract class Converter {
         }
 
         return object;
+    }
+
+    private static Object createEnum(Class type, String value) {
+        return Enum.valueOf(type, value);
     }
 
     private static Constructor getStringConstructor(Class type) {
