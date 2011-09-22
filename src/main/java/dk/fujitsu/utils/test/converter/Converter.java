@@ -19,7 +19,10 @@ public abstract class Converter {
     abstract Object toObject(String value);
 
     static {
+        CONVERTERS.put(boolean.class, new PrimitiveBooleanConverter());
+        CONVERTERS.put(double.class, new PrimitiveDoubleConverter());
         CONVERTERS.put(int.class, new PrimitiveIntegerConverter());
+        CONVERTERS.put(long.class, new PrimitiveLongConverter());
         CONVERTERS.put(String.class, new StringConverter());
     }
 
@@ -64,7 +67,11 @@ public abstract class Converter {
     }
 
     private static Object createEnum(Class type, String value) {
-        return Enum.valueOf(type, value);
+        try {
+            return Enum.valueOf(type, value);
+        } catch (Throwable x) {
+            throw new RuntimeException("failed converting \"" + value + "\" to " + type.getCanonicalName());
+        }
     }
 
     private static Constructor getStringConstructor(Class type) {

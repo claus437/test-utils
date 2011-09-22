@@ -1,9 +1,11 @@
 package dk.fujitsu.utils.test.table;
 
+import dk.fujitsu.utils.test.Reflection;
 import dk.fujitsu.utils.test.converter.Converter;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +41,11 @@ public class ObjectMapper<T> implements CellReader {
     public void read(String columnName, String columnValue) {
         Matcher matcher;
 
+        if ("${null}".equals(columnValue)) {
+            setValue(columnName, null);
+            return;
+        }
+
         if (singleColumn) {
             object = Converter.toObject(type, columnValue);
             objectList.add(object);
@@ -47,7 +54,7 @@ public class ObjectMapper<T> implements CellReader {
 
         matcher = OBJECT_LIST_REFERENCE.matcher(columnName);
         if (matcher.find()) {
-            setObject(matcher.group(1), Integer.parseInt(columnValue));
+            setForeignObject(matcher.group(1), Integer.parseInt(columnValue));
             return;
         }
 
@@ -80,14 +87,14 @@ public class ObjectMapper<T> implements CellReader {
         }
     }
 
-    private void setObject(String tableName, int row) {
+    private void setForeignObject(String tableName, int row) {
         Object foreignObject;
         Object value;
         Field[] fields;
 
         try {
             foreignObject = dataBase.getTable(type, tableName).readObject(row);
-            fields = type.getDeclaredFields();
+            fields = getFields(type);
 
             for (Field field : fields) {
                 field.setAccessible(true);
@@ -104,13 +111,11 @@ public class ObjectMapper<T> implements CellReader {
         Object o;
 
         try {
-            field = type.getDeclaredField(fieldName);
+            field = getField(type, fieldName);
             field.setAccessible(true);
 
             o = dataBase.getTable(getComponentType(field), tableName).readList();
             field.set(object, o);
-        } catch (NoSuchFieldException x) {
-            throw new RuntimeException(x.getMessage(), x);
         } catch (IllegalAccessException x) {
             throw new RuntimeException(x.getMessage(), x);
         }
@@ -121,13 +126,11 @@ public class ObjectMapper<T> implements CellReader {
         Object o;
 
         try {
-            field = type.getDeclaredField(fieldName);
+            field = getField(type, fieldName);
             field.setAccessible(true);
 
             o = dataBase.getTable(field.getType(), tableName).readObject(rowNo);
             field.set(object, o);
-        } catch (NoSuchFieldException x) {
-            throw new RuntimeException(x.getMessage(), x);
         } catch (IllegalAccessException x) {
             throw new RuntimeException(x.getMessage(), x);
         }
@@ -138,19 +141,29 @@ public class ObjectMapper<T> implements CellReader {
         Object o;
 
         try {
-            field = type.getDeclaredField(fieldName);
+            field = getField(type, fieldName);
             field.setAccessible(true);
 
             o = Converter.toObject(field.getType(), value);
             field.set(object, o);
-        } catch (NoSuchFieldException x) {
-            throw new RuntimeException(x.getMessage(), x);
         } catch (IllegalAccessException x) {
             throw new RuntimeException(x.getMessage(), x);
         }
     }
 
     private Class getComponentType(Field field) {
-        return (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+        try {
+            return (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+        } catch (ClassCastException x) {
+            throw new RuntimeException("field " + field.getName() + " has bad type parameter " + field.getGenericType());
+        }
+    }
+
+    private Field getField(Class type, String name) {
+        return Reflection.findField(type, name);
+    }
+
+    private Field[] getFields(Class type) {
+        return Reflection.findFields(type);
     }
 }

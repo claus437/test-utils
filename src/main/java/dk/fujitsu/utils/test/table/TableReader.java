@@ -38,11 +38,12 @@ public class TableReader {
 
         try {
             while((line = reader.readLine()) != null) {
-                lineNo ++;
                 if (parsing) {
                     if (!line.startsWith("|")) {
                         return;
                     }
+
+                    lineNo ++;
 
                     row = line.substring(start, end);
 
@@ -70,7 +71,7 @@ public class TableReader {
         } catch (IOException x) {
             throw new RuntimeException(x.getMessage(), x);
         } catch (Throwable x) {
-            throw new RuntimeException("error on line " + lineNo + ", " + x.getMessage(), x);
+            throw new RuntimeException(tableName + " error on line " + lineNo + ", " + x.getMessage(), x);
         }
     }
 

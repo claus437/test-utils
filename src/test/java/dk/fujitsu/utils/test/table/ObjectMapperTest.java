@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * To change this template use File | Settings | File Templates.
  */
 public class ObjectMapperTest {
-
+    public int myField;
 
     @Test
     public void testSetValue() {
@@ -82,9 +82,5 @@ public class ObjectMapperTest {
         Assert.assertEquals("100", subject.getObjectList().get(0).getWeight());
     }
 
-    @Test
-    public void testInheritedFields() {
-        this.getClass().getFields();
 
-    }
 }
