@@ -10,6 +10,6 @@ package dk.fujitsu.utils.test.converter;
 public class StringConverter extends Converter {
     @Override
     Object toObject(String value) {
-        return value;
+        return value.trim().isEmpty() ? null : value;
     }
 }

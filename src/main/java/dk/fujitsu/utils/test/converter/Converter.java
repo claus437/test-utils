@@ -37,6 +37,10 @@ public abstract class Converter {
             return (T) CONVERTERS.get(type).toObject(value);
         }
 
+        if (value.trim().isEmpty()) {
+            return null;
+        }
+
         if (type.isEnum()) {
             return (T) createEnum(type, value);
         }

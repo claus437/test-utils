@@ -10,6 +10,6 @@ package dk.fujitsu.utils.test.converter;
 public class PrimitiveDoubleConverter extends Converter {
     @Override
     Object toObject(String value) {
-        return Double.parseDouble(value);
+        return value.trim().isEmpty() ? 0 : Double.parseDouble(value);
     }
 }

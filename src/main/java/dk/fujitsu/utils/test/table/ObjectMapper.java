@@ -41,11 +41,6 @@ public class ObjectMapper<T> implements CellReader {
     public void read(String columnName, String columnValue) {
         Matcher matcher;
 
-        if ("${null}".equals(columnValue)) {
-            setValue(columnName, null);
-            return;
-        }
-
         if (singleColumn) {
             object = Converter.toObject(type, columnValue);
             objectList.add(object);

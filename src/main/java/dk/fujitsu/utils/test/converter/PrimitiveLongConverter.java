@@ -10,6 +10,6 @@ package dk.fujitsu.utils.test.converter;
 public class PrimitiveLongConverter extends Converter {
     @Override
     Object toObject(String value) {
-        return Long.parseLong(value);
+        return value.trim().isEmpty() ? 0 : Long.parseLong(value);
     }
 }

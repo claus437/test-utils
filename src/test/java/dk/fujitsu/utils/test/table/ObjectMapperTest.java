@@ -47,6 +47,13 @@ public class ObjectMapperTest {
 
         Assert.assertEquals(10, subject.getObjectList().get(0).getId());
         Assert.assertEquals("20", subject.getObjectList().get(0).getDimension().getLength());
+
+        subject.nextRow();
+        subject.read("id", "11");
+        subject.read("dimension", "${dimensions[1]}");
+
+        Assert.assertEquals(11, subject.getObjectList().get(1).getId());
+        Assert.assertEquals("21", subject.getObjectList().get(1).getDimension().getLength());
     }
 
     @Test

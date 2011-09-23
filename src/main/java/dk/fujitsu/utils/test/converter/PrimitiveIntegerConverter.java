@@ -10,6 +10,6 @@ package dk.fujitsu.utils.test.converter;
 public class PrimitiveIntegerConverter extends Converter {
     @Override
     Object toObject(String value) {
-        return Integer.parseInt(value);
+        return value.trim().isEmpty() ? 0 : Integer.parseInt(value);
     }
 }
