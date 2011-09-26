@@ -1,5 +1,7 @@
 package dk.fujitsu.utils.test.table;
 
+import javax.imageio.metadata.IIOInvalidTreeException;
+
 /**
  * Created by IntelliJ IDEA.
  * User: DENCBR
@@ -8,6 +10,6 @@ package dk.fujitsu.utils.test.table;
  * To change this template use File | Settings | File Templates.
  */
 public interface CellReader {
-    public void nextRow();
-    public void read(String columnName, String columnValue);
+    public void nextRow(int tableColumns, int rowColumns);
+    public void read(int index, int width, String columnName, String columnValue);
 }

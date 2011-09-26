@@ -34,7 +34,20 @@
 |           1 |
 |           2 |
 
+
+5. Spanning cells
+! span-dimensions        !
+| width | length | depth |
+|    10 |     20 |    30 |
+|                        |
+|    11 |     21 |    31 |
+
 ! shapes     !
+| id | name  |
+| 1  | Chair |
+| 2  | Piano |
+
+| shapes     |
 | id | name  |
 | 1  | Chair |
 | 2  | Piano |

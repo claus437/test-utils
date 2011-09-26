@@ -1,0 +1,31 @@
+
+# Checking positions out of board coordinates throws an IllegalPositionException
+
+!positions !    ! positions_exp                        !
+| x   | y  |    | detailedMessage                      |
+| A   | 0  |    | 0 is not a valid vertical position   |   below Y boundary check
+| A   | 9  |    | 9 is not a valid vertical position   |   above Y boundary check
+| z   | 1  |    | z is not a valid horizontal position |   below X boundary check
+| I   | 1  |    | I is not a valid horizontal position |   above X boundary check
+
+
+# Checking valid boundary positions within an empty board are returning null.
+
+!valid-positions !    ! valid-positions_exp !
+| x      | y     |    | color | position    |
+| A      | 1     |    |                     |   lowest acceptable Y coordinate
+| A      | 8     |    |                     |   highest acceptable Y coordinate
+| H      | 1     |    |                     |   lowest acceptable X coordinate
+| H      | 8     |    |                     |   highest acceptable X coordinate
+
+
+!line-up                                !
+| a  | b  | c  | d  | e  | f  | g  | h  |
+| BR | BN | BB | BQ | BK | BB | BN | BR |
+| BP | BP | BP | BP | BP | BP | BP | BP |
+|    |    |    |    |    |    |    |    |
+|    |    |    |    |    |    |    |    |
+|    |    |    |    |    |    |    |    |
+|    |    |    |    |    |    |    |    |
+| WP | WP | WP | WP | WP | WP | WP | WP |
+| WR | WN | WB | WQ | WK | WB | WN | WR |

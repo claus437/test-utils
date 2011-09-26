@@ -34,6 +34,13 @@ public class DataBase {
     }
 
     private InputStream getInputStream(String resource) {
-        return getClass().getClassLoader().getResourceAsStream(resource);
+        InputStream stream;
+
+        stream = getClass().getClassLoader().getResourceAsStream(resource);
+        if (stream == null) {
+            throw new RuntimeException("found no resource named " + resource);
+        }
+
+        return stream;
     }
 }

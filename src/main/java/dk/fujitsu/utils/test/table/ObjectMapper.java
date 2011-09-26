@@ -20,6 +20,8 @@ public class ObjectMapper<T> implements CellReader {
     private Class<T> type;
     private DataBase dataBase;
     private boolean singleColumn;
+    private int tableColumns;
+    private int rowColumns;
 
     public ObjectMapper(DataBase dataBase, Class<T> type) {
         objectList = new ArrayList<T>();
@@ -31,20 +33,31 @@ public class ObjectMapper<T> implements CellReader {
         }
     }
 
-    public void nextRow() {
-        if (!singleColumn) {
-            object = createObject();
-            objectList.add(object);
-        }
+    public void nextRow(int tableColumns, int rowColumns) {
+        this.rowColumns = rowColumns;
+        this.tableColumns = tableColumns;
+
+        object = null;
     }
 
-    public void read(String columnName, String columnValue) {
+    public void read(int index, int width, String columnName, String columnValue) {
         Matcher matcher;
+
+        if (tableColumns == width && columnValue.trim().isEmpty()) {
+            object = null;
+            objectList.add(object);
+            return;
+        }
 
         if (singleColumn) {
             object = Converter.toObject(type, columnValue);
             objectList.add(object);
             return;
+        }
+
+        if (object == null) {
+            object = createObject();
+            objectList.add(object);
         }
 
         matcher = OBJECT_LIST_REFERENCE.matcher(columnName);

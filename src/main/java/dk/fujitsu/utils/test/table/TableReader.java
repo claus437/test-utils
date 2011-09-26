@@ -81,7 +81,7 @@ public class TableReader {
         int columns;
         int pos;
 
-        columns = count(row, '|');
+        columns = count(row, '|') - 1;
 
         columnNames = new String[columns];
         columnPositions = new int[columns];
@@ -100,8 +100,15 @@ public class TableReader {
     private void readRow(CellReader cellReader, String rowData) {
         String cell;
         int end;
+        int width;
+        int columnCount;
 
-        cellReader.nextRow();
+        columnCount = count(rowData, '|') - 1;
+
+        cellReader.nextRow(columnNames.length, columnCount);
+
+        // TODO: width calculated correctly for full row span only
+        width = columnNames.length - columnCount + 1;
 
         for (int i = 0; i < columnPositions.length;) {
             end = rowData.indexOf("|", columnPositions[i]);
@@ -111,7 +118,7 @@ public class TableReader {
             }
 
             cell = rowData.substring(columnPositions[i], end);
-            cellReader.read(columnNames[i].trim(), cell.trim());
+            cellReader.read(i, width, columnNames[i].trim(), cell.trim());
 
             while (i < columnPositions.length && columnPositions[i] - 1 != end) {
                 i++;

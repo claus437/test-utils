@@ -20,6 +20,7 @@ public abstract class Converter {
 
     static {
         CONVERTERS.put(boolean.class, new PrimitiveBooleanConverter());
+        CONVERTERS.put(char.class, new PrimitiveCharConverter());
         CONVERTERS.put(double.class, new PrimitiveDoubleConverter());
         CONVERTERS.put(int.class, new PrimitiveIntegerConverter());
         CONVERTERS.put(long.class, new PrimitiveLongConverter());
