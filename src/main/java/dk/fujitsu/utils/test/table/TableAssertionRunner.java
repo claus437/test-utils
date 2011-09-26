@@ -70,7 +70,7 @@ public abstract class TableAssertionRunner<I, E> {
             expected = dataBase.getTable(expectedType, expectTable).readObject(i);
 
             try {
-                actual = (E) execute(inputList.get(i));
+                actual = execute(inputList.get(i));
                 done(i + 1, expected, actual);
             } catch (Throwable x) {
                 if (x.getClass() == expectedType) {

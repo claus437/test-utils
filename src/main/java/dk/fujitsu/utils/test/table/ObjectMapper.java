@@ -5,7 +5,6 @@ import dk.fujitsu.utils.test.converter.Converter;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,41 +42,48 @@ public class ObjectMapper<T> implements CellReader {
     public void read(int index, int width, String columnName, String columnValue) {
         Matcher matcher;
 
+        // cells spanned or single value raw object and value empty so null
         if (tableColumns == width && columnValue.trim().isEmpty()) {
             object = null;
             objectList.add(object);
             return;
         }
 
+        // raw object
         if (singleColumn) {
             object = Converter.toObject(type, columnValue);
             objectList.add(object);
             return;
         }
 
+        // new container if not already created.
         if (object == null) {
             object = createObject();
             objectList.add(object);
         }
 
+        // If header is referring to another table, pick each cell from that table.
         matcher = OBJECT_LIST_REFERENCE.matcher(columnName);
         if (matcher.find()) {
             setForeignObject(matcher.group(1), Integer.parseInt(columnValue));
             return;
         }
 
+        // If cell refers to another table row, pick entire row as a single object value
         matcher = OBJECT_REFERENCE.matcher(columnValue);
         if (matcher.find()) {
             setObject(columnName, matcher.group(1), Integer.parseInt(matcher.group(2)));
             return;
         }
 
+        // If cell refers to a complete table
         matcher = OBJECT_LIST_REFERENCE.matcher(columnValue);
         if (matcher.find()) {
             setListObject(columnName, matcher.group(1));
             return;
         }
 
+        // Set column value as attribute value
         setValue(columnName, columnValue);
     }
 

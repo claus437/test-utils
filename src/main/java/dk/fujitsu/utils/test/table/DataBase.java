@@ -16,7 +16,6 @@ public class DataBase {
     private String resource;
 
     public DataBase(String resource) {
-        System.out.println("1");
         tables = new HashMap<String, TableDataProvider>();
         this.resource = resource;
     }

@@ -14,13 +14,19 @@ import java.lang.reflect.Field;
  */
 public class ObjectVerifier implements CellReader {
     private Object object;
+    private int rowNo;
+    private int currentRowNo;
+    private int rowColumns;
 
-    public ObjectVerifier(Object object) {
+    public ObjectVerifier(Object object, int rowNo) {
         this.object = object;
+        this.rowNo = rowNo;
     }
 
     @Override
     public void nextRow(int tableColumns, int rowColumns) {
+        this.currentRowNo ++;
+        this.rowColumns = rowColumns;
 
     }
 
@@ -28,18 +34,45 @@ public class ObjectVerifier implements CellReader {
     public void read(int index, int width, String columnName, String columnValue) {
         Field field;
 
+        if (rowNo != currentRowNo) {
+            return;
+        }
+
+        if (object == null && columnValue.isEmpty()) {
+            return;
+        }
+
+        if (object == null && !columnValue.isEmpty()) {
+            throw new AssertionError("expected:<" + columnValue + "> but was: <null>");
+        }
+
+        if (Converter.isConvertible(object.getClass())) {
+            check(Converter.toObject(object.getClass(),columnValue), object);
+            return;
+        }
+
+
         field = Reflection.findField(object.getClass(), columnName);
+        field.setAccessible(true);
 
         try {
-            check(field.get(object), Converter.toObject(field.getClass(), columnName));
+            check(Converter.toObject(field.getType(), columnValue), field.get(object));
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
-    private void check(Object a, Object b) {
+    private void check(Object expected, Object actual) {
+        if (expected != null && actual == null) {
+            throw new AssertionError("expected:<" + expected + "> but was: <" + actual + ">");
+        }
 
+        if (expected == null && actual != null) {
+            throw new AssertionError("expected:<" + expected + "> but was: <" + actual + ">");
+        }
+
+        if (expected != null && ! expected.equals(actual)) {
+            throw new AssertionError("expected:<" + expected + "> but was: <" + actual + ">");
+        }
     }
-
-
 }
