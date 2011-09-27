@@ -1,36 +1,30 @@
 package dk.fujitsu.utils.test.table;
 
-import dk.fujitsu.utils.test.table.tableassertionrunnersupport.ChessBoard;
-import dk.fujitsu.utils.test.table.tableassertionrunnersupport.ChessPiece;
-import dk.fujitsu.utils.test.table.tableassertionrunnersupport.IllegalPositionException;
-import dk.fujitsu.utils.test.table.tableassertionrunnersupport.Position;
-import org.junit.Assert;
+import dk.fujitsu.utils.test.Dimension;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class TableAssertionRunnerTest {
-    private DataBase db = new DataBase("dk/fujitsu/utils/test/table/tableassertionrunnersupport/chess.txt");
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private DataBase db = new DataBase("dk/fujitsu/utils/test/table/TableAssertionRunnerTest.txt");
+
+    public int calculateArea(Dimension dimension) {
+        System.out.println("di: " + dimension.getWidth() + " " + dimension.getLength());
+        return dimension.getWidth() * Integer.parseInt(dimension.getLength());
+    }
 
     @Test
-    public void testExceptionAssertion() throws Throwable {
-        TableAssertionRunner<Position, IllegalPositionException> runner;
+    public void testExpectationsOk() throws Throwable {
+        TableAssertionRunner<Dimension, Integer> runner;
 
-        runner = new TableAssertionRunner<Position, IllegalPositionException>(
-            db, Position.class, "positions", IllegalPositionException.class, "positions_exp") {
+        runner = new TableAssertionRunner<Dimension, Integer>(
+            db, Dimension.class, "calc-area", Integer.class, "exp.calc-area-ok") {
             @Override
-            IllegalPositionException execute(Position object) {
-                ChessBoard board;
-
-                board = new ChessBoard();
-                board.getChessPiece(object);
-
-                return null;
-            }
-
-            @Override
-            public void done(int row, IllegalPositionException expected, IllegalPositionException actual) {
-                super.done(row, actual, expected);
-
-                Assert.assertEquals(expected.getMessage(), actual.getMessage());
+            Integer execute(Dimension dimension) {
+                return calculateArea(dimension);
             }
         };
 
@@ -38,27 +32,21 @@ public class TableAssertionRunnerTest {
     }
 
     @Test
-    public void testExceptionValidPositions() throws Throwable {
-        TableAssertionRunner<Position, ChessPiece> runner;
+    public void testExpectationsIncorrect() throws Throwable {
+        TableAssertionRunner<Dimension, Integer> runner;
 
-        runner = new TableAssertionRunner<Position, ChessPiece>(db, Position.class, "valid-positions", ChessPiece.class, "valid-positions_exp") {
+        thrown.expect(AssertionError.class);
+        thrown.expectMessage("expected:<3> but was: <2>");
 
+        runner = new TableAssertionRunner<Dimension, Integer>(
+            db, Dimension.class, "calc-area", Integer.class, "exp.calc-area-bad") {
             @Override
-            ChessPiece execute(Position object) {
-                ChessBoard board;
-
-                board = new ChessBoard();
-                return board.getChessPiece(object);
-            }
-
-            @Override
-            public void done(int row, ChessPiece expected, ChessPiece actual) {
-                super.done(row, expected, actual);
-
-                Assert.assertEquals(expected, actual);
+            Integer execute(Dimension dimension) {
+                return calculateArea(dimension);
             }
         };
 
         runner.run();
     }
+
 }

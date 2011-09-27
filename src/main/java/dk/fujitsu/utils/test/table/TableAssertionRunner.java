@@ -5,24 +5,26 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public abstract class TableAssertionRunner<I, E> {
+public abstract class TableAssertionRunner<I, O> {
     private static final Logger LOGGER = Logger.getLogger(TableAssertionRunner.class);
     private DataBase dataBase;
     private String inputTable;
     private String expectTable;
     private Class<I> inputType;
-    private Class<E> expectedType;
+    private Class<O> expectedType;
+    private TableObjectVerifier verifier;
 
-    public TableAssertionRunner(DataBase dataBase, Class<I> inputType, String inputTable, Class<E> expectedType, String expectTable) {
+    public TableAssertionRunner(DataBase dataBase, Class<I> inputType, String inputTable, Class<O> expectedType, String expectTable) {
         this.dataBase = dataBase;
         this.inputTable = inputTable;
         this.expectTable = expectTable;
         this.inputType = inputType;
         this.expectedType = expectedType;
+        verifier = new TableObjectVerifier(dataBase.getResource());
     }
 
 
-    abstract E execute(I object) throws Throwable;
+    abstract O execute(I object) throws Throwable;
 
     public DataBase getDataBase() {
         return dataBase;
@@ -56,25 +58,24 @@ public abstract class TableAssertionRunner<I, E> {
         this.inputType = inputType;
     }
 
-    public void done(int row, E expected, E actual) {
-        System.out.println("done: #" + row + " " + actual + " " + expected);
+    public void done(int row, O actual) {
+        System.out.println(row + " " + actual + " " + actual);
+        verifier.verify(actual, expectTable, row);
     }
 
     public void run() throws Throwable {
         List<I> inputList;
-        E expected;
-        E actual;
+        O actual;
 
         inputList = dataBase.getTable(inputType, inputTable).readList();
         for (int i = 0; i < inputList.size(); i++) {
-            expected = dataBase.getTable(expectedType, expectTable).readObject(i);
 
             try {
                 actual = execute(inputList.get(i));
-                done(i + 1, expected, actual);
+                done(i + 1, actual);
             } catch (Throwable x) {
                 if (x.getClass() == expectedType) {
-                    done(i + 1, expected, (E) x);
+                    done(i + 1, (O) x);
                 } else {
                     throw x;
                 }

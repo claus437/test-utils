@@ -1,6 +1,7 @@
 package dk.fujitsu.utils.test.table;
 
 import dk.fujitsu.utils.test.Dimension;
+import dk.fujitsu.utils.test.IOUtil;
 import org.junit.Test;
 
 /**

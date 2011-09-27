@@ -23,7 +23,6 @@ public class TableObjectVerifier {
         ObjectVerifier verifier;
 
         verifier = new ObjectVerifier(object, rowNo);
-
         reader = new TableReader(verifier);
         reader.read(table, IOUtil.getResource(resource));
     }

@@ -1,5 +1,7 @@
 package dk.fujitsu.utils.test.table;
 
+import dk.fujitsu.utils.test.IOUtil;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,21 +27,14 @@ public class DataBase {
 
         provider = tables.get(table);
         if (provider == null) {
-            provider = new TableDataProvider<T>(this, type, table, getInputStream(resource));
+            provider = new TableDataProvider<T>(this, type, table, IOUtil.getResource(resource));
             tables.put(table, provider);
         }
 
         return provider;
     }
 
-    private InputStream getInputStream(String resource) {
-        InputStream stream;
-
-        stream = getClass().getClassLoader().getResourceAsStream(resource);
-        if (stream == null) {
-            throw new RuntimeException("found no resource named " + resource);
-        }
-
-        return stream;
+    public String getResource() {
+        return resource;
     }
 }

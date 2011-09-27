@@ -1,0 +1,7 @@
+! calc-area              !  ! exp.calc-area-ok !  ! exp.calc-area-bad !
+| width | length | depth |  | value            |  | value             |
+|     1 |      2 |     1 |  |                2 |  |                 3 |
+|     3 |      4 |     2 |  |               12 |  |                13 |
+|     5 |      6 |    10 |  |               30 |  |                31 |
+
+

@@ -70,6 +70,8 @@ public class TableReader {
             }
         } catch (IOException x) {
             throw new RuntimeException(x.getMessage(), x);
+        } catch (AssertionError x) {
+            throw x;
         } catch (Throwable x) {
             throw new RuntimeException(tableName + " error on line " + lineNo + ", " + x.getMessage(), x);
         }

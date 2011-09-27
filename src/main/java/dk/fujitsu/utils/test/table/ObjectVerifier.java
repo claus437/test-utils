@@ -27,13 +27,13 @@ public class ObjectVerifier implements CellReader {
     public void nextRow(int tableColumns, int rowColumns) {
         this.currentRowNo ++;
         this.rowColumns = rowColumns;
-
     }
 
     @Override
     public void read(int index, int width, String columnName, String columnValue) {
         Field field;
 
+        System.out.println("reading (" + rowNo + ":" + currentRowNo + ")" + index + " " + width + " " + columnName + " " + columnValue);
         if (rowNo != currentRowNo) {
             return;
         }
@@ -63,6 +63,7 @@ public class ObjectVerifier implements CellReader {
     }
 
     private void check(Object expected, Object actual) {
+        System.out.println("checking " + expected + " " + actual);
         if (expected != null && actual == null) {
             throw new AssertionError("expected:<" + expected + "> but was: <" + actual + ">");
         }
