@@ -4,6 +4,7 @@ import sun.java2d.SunGraphicsEnvironment;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 public abstract class Converter {
     private static final Map<Class, Converter> CONVERTERS = new HashMap<Class, Converter>();
     abstract Object toObject(String value);
+    abstract Object getInitValue();
 
     static {
         CONVERTERS.put(boolean.class, new PrimitiveBooleanConverter());
@@ -25,10 +27,15 @@ public abstract class Converter {
         CONVERTERS.put(int.class, new PrimitiveIntegerConverter());
         CONVERTERS.put(long.class, new PrimitiveLongConverter());
         CONVERTERS.put(String.class, new StringConverter());
+        CONVERTERS.put(Date.class, new DateConverter());
     }
 
     public static boolean isConvertible(Class type) {
         return CONVERTERS.containsKey(type) || type.isEnum();
+    }
+
+    public static Object getInitialValue(Class type) {
+        return type.isPrimitive() ? CONVERTERS.get(type).getInitValue() : null;
     }
 
     public static <T> T toObject(Class<T> type, String value) {

@@ -12,4 +12,9 @@ public class PrimitiveCharConverter extends Converter{
     Object toObject(String value) {
         return value.isEmpty() ? 0 : value.charAt(0);
     }
+
+    @Override
+    Object getInitValue() {
+        return (char) 0;
+    }
 }

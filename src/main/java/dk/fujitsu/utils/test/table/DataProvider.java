@@ -13,11 +13,11 @@ import java.util.Map;
  * Time: 16:42
  * To change this template use File | Settings | File Templates.
  */
-public class DataBase {
+public class DataProvider {
     private Map<String, TableDataProvider> tables;
     private String resource;
 
-    public DataBase(String resource) {
+    public DataProvider(String resource) {
         tables = new HashMap<String, TableDataProvider>();
         this.resource = resource;
     }

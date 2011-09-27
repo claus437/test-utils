@@ -12,4 +12,9 @@ public class PrimitiveDoubleConverter extends Converter {
     Object toObject(String value) {
         return value.trim().isEmpty() ? 0 : Double.parseDouble(value);
     }
+
+    @Override
+    Object getInitValue() {
+        return 0D;
+    }
 }

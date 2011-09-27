@@ -8,7 +8,7 @@ public class TableDataProvider<T> {
     private List<T> objectList;
 
 
-    public TableDataProvider(DataBase database, Class<T> type, String tableName, InputStream resource) {
+    public TableDataProvider(DataProvider database, Class<T> type, String tableName, InputStream resource) {
         TableReader reader;
         ObjectMapper<T> mapper;
 

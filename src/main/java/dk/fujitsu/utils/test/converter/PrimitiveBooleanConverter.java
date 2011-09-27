@@ -12,4 +12,9 @@ public class PrimitiveBooleanConverter extends Converter {
     Object toObject(String value) {
         return value.equals("Y") || value.equals("1") || value.toLowerCase().equals("true");
     }
+
+    @Override
+    Object getInitValue() {
+        return false;
+    }
 }

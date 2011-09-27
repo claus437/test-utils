@@ -9,7 +9,7 @@ public class TableAssertionRunnerTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private DataBase db = new DataBase("dk/fujitsu/utils/test/table/TableAssertionRunnerTest.txt");
+    private DataProvider db = new DataProvider("dk/fujitsu/utils/test/table/TableAssertionRunnerTest.txt");
 
     public int calculateArea(Dimension dimension) {
         System.out.println("di: " + dimension.getWidth() + " " + dimension.getLength());

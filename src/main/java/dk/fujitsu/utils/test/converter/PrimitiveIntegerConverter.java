@@ -12,4 +12,9 @@ public class PrimitiveIntegerConverter extends Converter {
     Object toObject(String value) {
         return value.trim().isEmpty() ? 0 : Integer.parseInt(value);
     }
+
+    @Override
+    Object getInitValue() {
+        return 0;
+    }
 }

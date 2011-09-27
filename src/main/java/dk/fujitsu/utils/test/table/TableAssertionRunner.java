@@ -3,12 +3,11 @@ package dk.fujitsu.utils.test.table;
 
 import org.apache.log4j.Logger;
 
-import javax.swing.text.TabExpander;
 import java.util.List;
 
 public abstract class TableAssertionRunner<I, O> {
     private static final Logger LOGGER = Logger.getLogger(TableAssertionRunner.class);
-    private DataBase dataBase;
+    private DataProvider dataBase;
     private String inputTable;
     private String expectTable;
     private Class<I> inputType;
@@ -18,7 +17,7 @@ public abstract class TableAssertionRunner<I, O> {
     public TableAssertionRunner() {
     }
 
-    public TableAssertionRunner(DataBase dataBase, Class<I> inputType, String inputTable, Class<O> expectedType, String expectTable) {
+    public TableAssertionRunner(DataProvider dataBase, Class<I> inputType, String inputTable, Class<O> expectedType, String expectTable) {
         this.dataBase = dataBase;
         this.inputTable = inputTable;
         this.expectTable = expectTable;
@@ -29,11 +28,11 @@ public abstract class TableAssertionRunner<I, O> {
 
     protected abstract O execute(I object) throws Throwable;
 
-    public DataBase getDataBase() {
+    public DataProvider getDataBase() {
         return dataBase;
     }
 
-    public void setDataBase(DataBase dataBase) {
+    public void setDataBase(DataProvider dataBase) {
         this.dataBase = dataBase;
     }
 

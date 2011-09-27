@@ -12,4 +12,9 @@ public class StringConverter extends Converter {
     Object toObject(String value) {
         return value.trim().isEmpty() ? null : value;
     }
+
+    @Override
+    Object getInitValue() {
+        return null;
+    }
 }

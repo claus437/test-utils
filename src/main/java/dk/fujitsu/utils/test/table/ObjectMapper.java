@@ -17,12 +17,12 @@ public class ObjectMapper<T> implements CellReader {
     private List<T> objectList;
     private T object;
     private Class<T> type;
-    private DataBase dataBase;
+    private DataProvider dataBase;
     private boolean singleColumn;
     private int tableColumns;
     private int rowColumns;
 
-    public ObjectMapper(DataBase dataBase, Class<T> type) {
+    public ObjectMapper(DataProvider dataBase, Class<T> type) {
         objectList = new ArrayList<T>();
         this.type = type;
         this.dataBase = dataBase;

@@ -18,7 +18,7 @@ public class TableDataProviderTest {
 
     @Before
     public void setup() {
-        subject = new TableDataProvider<Dimension>(new DataBase(""), Dimension.class, "dimension", getClass().getClassLoader().getResourceAsStream("dk/fujitsu/utils/test/table/table.txt"));
+        subject = new TableDataProvider<Dimension>(new DataProvider(""), Dimension.class, "dimension", getClass().getClassLoader().getResourceAsStream("dk/fujitsu/utils/test/table/table.txt"));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class TableDataProviderTest {
     public void testSingleValueTable() {
         TableDataProvider<String> subject;
 
-        subject = new TableDataProvider<String>(new DataBase(""), String.class, "singleValue", getClass().getClassLoader().getResourceAsStream("dk/fujitsu/utils/test/table/table.txt"));
+        subject = new TableDataProvider<String>(new DataProvider(""), String.class, "singleValue", getClass().getClassLoader().getResourceAsStream("dk/fujitsu/utils/test/table/table.txt"));
 
         Assert.assertEquals(2, subject.readList().size());
         Assert.assertEquals("1", subject.readList().get(0));

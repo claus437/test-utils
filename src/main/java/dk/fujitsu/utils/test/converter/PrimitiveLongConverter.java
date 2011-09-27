@@ -12,4 +12,9 @@ public class PrimitiveLongConverter extends Converter {
     Object toObject(String value) {
         return value.trim().isEmpty() ? 0 : Long.parseLong(value);
     }
+
+    @Override
+    Object getInitValue() {
+        return 0L;
+    }
 }

@@ -4,11 +4,7 @@ import dk.fujitsu.utils.test.Dimension;
 import dk.fujitsu.utils.test.ExtendedDimension;
 import dk.fujitsu.utils.test.Figure;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,7 +18,7 @@ public class ObjectMapperTest {
 
     @Test
     public void testSetValue() {
-        ObjectMapper<Dimension> subject = new ObjectMapper<Dimension>(new DataBase(""), Dimension.class);
+        ObjectMapper<Dimension> subject = new ObjectMapper<Dimension>(new DataProvider(""), Dimension.class);
 
         subject.nextRow(1, 1);
         subject.read(0, 1, "length", "10");
@@ -36,9 +32,9 @@ public class ObjectMapperTest {
 
     @Test
     public void testNestedObject() {
-        DataBase dataBase;
+        DataProvider dataBase;
 
-        dataBase = new DataBase("dk/fujitsu/utils/test/table/table.txt");
+        dataBase = new DataProvider("dk/fujitsu/utils/test/table/table.txt");
         ObjectMapper<Figure> subject = new ObjectMapper<Figure>(dataBase, Figure.class);
 
         subject.nextRow(3, 3);
@@ -58,9 +54,9 @@ public class ObjectMapperTest {
 
     @Test
     public void testListObject() {
-        DataBase dataBase;
+        DataProvider dataBase;
 
-        dataBase = new DataBase("dk/fujitsu/utils/test/table/table.txt");
+        dataBase = new DataProvider("dk/fujitsu/utils/test/table/table.txt");
         ObjectMapper<Figure> subject = new ObjectMapper<Figure>(dataBase, Figure.class);
 
         subject.nextRow(2, 2);
@@ -74,9 +70,9 @@ public class ObjectMapperTest {
 
     @Test
     public void testMergedTables() {
-        DataBase dataBase;
+        DataProvider dataBase;
 
-        dataBase = new DataBase("dk/fujitsu/utils/test/table/table.txt");
+        dataBase = new DataProvider("dk/fujitsu/utils/test/table/table.txt");
         ObjectMapper<ExtendedDimension> subject = new ObjectMapper<ExtendedDimension>(dataBase, ExtendedDimension.class);
 
         subject.nextRow(4, 4);
@@ -91,9 +87,9 @@ public class ObjectMapperTest {
 
     @Test
     public void testSpannedNullObject() {
-        DataBase dataBase;
+        DataProvider dataBase;
 
-        dataBase = new DataBase("dk/fujitsu/utils/test/table/table.txt");
+        dataBase = new DataProvider("dk/fujitsu/utils/test/table/table.txt");
         ObjectMapper<Dimension> subject = new ObjectMapper<Dimension>(dataBase, Dimension.class);
 
         subject.nextRow(3, 1);
@@ -104,9 +100,9 @@ public class ObjectMapperTest {
 
     @Test
     public void testNullObject() {
-        DataBase dataBase;
+        DataProvider dataBase;
 
-        dataBase = new DataBase("dk/fujitsu/utils/test/table/table.txt");
+        dataBase = new DataProvider("dk/fujitsu/utils/test/table/table.txt");
         ObjectMapper<Dimension> subject = new ObjectMapper<Dimension>(dataBase, Dimension.class);
 
         subject.nextRow(1, 1);
