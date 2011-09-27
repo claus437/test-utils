@@ -63,8 +63,6 @@ public class TableReader {
 
                     start = matcher.start();
                     end = matcher.end();
-
-                    System.out.println("S: " + start + " " + end);
                     parsing = true;
                 }
             }

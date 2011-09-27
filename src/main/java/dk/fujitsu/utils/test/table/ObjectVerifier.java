@@ -2,6 +2,7 @@ package dk.fujitsu.utils.test.table;
 
 import dk.fujitsu.utils.test.Reflection;
 import dk.fujitsu.utils.test.converter.Converter;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
 
@@ -13,6 +14,7 @@ import java.lang.reflect.Field;
  * To change this template use File | Settings | File Templates.
  */
 public class ObjectVerifier implements CellReader {
+    private static final Logger LOGGER = Logger.getLogger(ObjectVerifier.class);
     private Object object;
     private int rowNo;
     private int currentRowNo;
@@ -33,7 +35,14 @@ public class ObjectVerifier implements CellReader {
     public void read(int index, int width, String columnName, String columnValue) {
         Field field;
 
-        System.out.println("reading (" + rowNo + ":" + currentRowNo + ")" + index + " " + width + " " + columnName + " " + columnValue);
+        LOGGER.debug(
+                "reading row: " + currentRowNo +
+                " verify row:" + rowNo +
+                " columnIndex + " + index +
+                " columnWidth " + width +
+                " columnName " + columnName +
+                " columnValue " + columnValue);
+
         if (rowNo != currentRowNo) {
             return;
         }
@@ -47,7 +56,8 @@ public class ObjectVerifier implements CellReader {
         }
 
         if (Converter.isConvertible(object.getClass())) {
-            check(Converter.toObject(object.getClass(),columnValue), object);
+            System.out.println("checking raw type: " + object.getClass());
+            check(Converter.toObject(object.getClass(), columnValue), object);
             return;
         }
 
@@ -56,6 +66,7 @@ public class ObjectVerifier implements CellReader {
         field.setAccessible(true);
 
         try {
+            System.out.println("checking field: " + field.getType().getCanonicalName() + " " + field.getName());
             check(Converter.toObject(field.getType(), columnValue), field.get(object));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -63,7 +74,8 @@ public class ObjectVerifier implements CellReader {
     }
 
     private void check(Object expected, Object actual) {
-        System.out.println("checking " + expected + " " + actual);
+        LOGGER.debug("asserting expected: " + expected + " actual: " + actual);
+
         if (expected != null && actual == null) {
             throw new AssertionError("expected:<" + expected + "> but was: <" + actual + ">");
         }

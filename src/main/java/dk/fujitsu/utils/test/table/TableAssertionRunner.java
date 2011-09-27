@@ -3,6 +3,7 @@ package dk.fujitsu.utils.test.table;
 
 import org.apache.log4j.Logger;
 
+import javax.swing.text.TabExpander;
 import java.util.List;
 
 public abstract class TableAssertionRunner<I, O> {
@@ -14,17 +15,19 @@ public abstract class TableAssertionRunner<I, O> {
     private Class<O> expectedType;
     private TableObjectVerifier verifier;
 
+    public TableAssertionRunner() {
+    }
+
     public TableAssertionRunner(DataBase dataBase, Class<I> inputType, String inputTable, Class<O> expectedType, String expectTable) {
         this.dataBase = dataBase;
         this.inputTable = inputTable;
         this.expectTable = expectTable;
         this.inputType = inputType;
         this.expectedType = expectedType;
-        verifier = new TableObjectVerifier(dataBase.getResource());
     }
 
 
-    abstract O execute(I object) throws Throwable;
+    protected abstract O execute(I object) throws Throwable;
 
     public DataBase getDataBase() {
         return dataBase;
@@ -58,8 +61,16 @@ public abstract class TableAssertionRunner<I, O> {
         this.inputType = inputType;
     }
 
+    public Class<O> getExpectedType() {
+        return expectedType;
+    }
+
+    public void setExpectedType(Class<O> expectedType) {
+        this.expectedType = expectedType;
+    }
+
     public void done(int row, O actual) {
-        System.out.println(row + " " + actual + " " + actual);
+        LOGGER.debug("verifying row #" + row + " in table " + expectTable + " for value " + actual);
         verifier.verify(actual, expectTable, row);
     }
 
@@ -67,19 +78,13 @@ public abstract class TableAssertionRunner<I, O> {
         List<I> inputList;
         O actual;
 
+        verifier = new TableObjectVerifier(dataBase.getResource());
+
         inputList = dataBase.getTable(inputType, inputTable).readList();
         for (int i = 0; i < inputList.size(); i++) {
 
-            try {
-                actual = execute(inputList.get(i));
-                done(i + 1, actual);
-            } catch (Throwable x) {
-                if (x.getClass() == expectedType) {
-                    done(i + 1, (O) x);
-                } else {
-                    throw x;
-                }
-            }
+            actual = execute(inputList.get(i));
+            done(i + 1, actual);
         }
     }
 }

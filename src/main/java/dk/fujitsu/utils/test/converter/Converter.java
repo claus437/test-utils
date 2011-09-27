@@ -28,7 +28,7 @@ public abstract class Converter {
     }
 
     public static boolean isConvertible(Class type) {
-        return CONVERTERS.containsKey(type) || type.isEnum() || getStringConstructor(type) != null;
+        return CONVERTERS.containsKey(type) || type.isEnum();
     }
 
     public static <T> T toObject(Class<T> type, String value) {
