@@ -23,7 +23,7 @@ public class TableAssertionRunnerTest {
         runner = new TableAssertionRunner<Dimension, Integer>(
             db, Dimension.class, "calc-area", Integer.class, "exp.calc-area-ok") {
             @Override
-            Integer execute(Dimension dimension) {
+            protected Integer execute(Dimension dimension) {
                 return calculateArea(dimension);
             }
         };
@@ -41,12 +41,11 @@ public class TableAssertionRunnerTest {
         runner = new TableAssertionRunner<Dimension, Integer>(
             db, Dimension.class, "calc-area", Integer.class, "exp.calc-area-bad") {
             @Override
-            Integer execute(Dimension dimension) {
+            protected Integer execute(Dimension dimension) {
                 return calculateArea(dimension);
             }
         };
 
         runner.run();
     }
-
 }
