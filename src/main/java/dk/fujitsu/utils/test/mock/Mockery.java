@@ -104,7 +104,11 @@ public class Mockery<T> implements InvocationHandler {
             }
         }
 
-        return Converter.getInitialValue(method.getReturnType());
+        if (method.getReturnType() == void.class) {
+            return void.class;
+        } else {
+            return Converter.getInitialValue(method.getReturnType());
+        }
     }
 
     Class getMockedClass() {
